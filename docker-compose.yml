@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+
+  updater:
+    build: .
+    restart: on-failure
+    env_file:
+      - .env
+    container_name: ${REDIS_WORKER_NAME}
+#    networks:
+#      ai_chat-backend:
