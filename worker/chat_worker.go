@@ -13,11 +13,12 @@ func SyncChatDatabase(ctx context.Context, database *services.Database, val *red
 	sessionId := val.Values["sessionId"].(string)
 	sessionPrompt := val.Values["sessionPrompt"].(string)
 	chats := val.Values["chats"].(string)
+	chatsSummary := val.Values["chatsSummary"].(string)
 	isNew := val.Values["isNew"].(string)
 
 	dataContext, cancel := context.WithDeadline(ctx, time.Now().Add(time.Minute))
 
-	errData := database.AddChat(dataContext, sessionId, sessionPrompt, chats, isNew)
+	errData := database.AddChat(dataContext, sessionId, sessionPrompt, chats, chatsSummary, isNew)
 
 	if helpers.ContextError(dataContext) != nil || errData != nil {
 		cancel()

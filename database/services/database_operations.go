@@ -55,7 +55,7 @@ func (dataBase *Database) AddSession(ctx context.Context, userId string, session
 	return nil
 }
 
-func (dataBase *Database) AddChat(ctx context.Context, sessionId string, prompt string, chats string, isNew string) error {
+func (dataBase *Database) AddChat(ctx context.Context, sessionId string, prompt string, chats string, chatsSummary string, isNew string) error {
 	var query string
 	var rows sql.Result
 	var err error = nil
@@ -78,15 +78,17 @@ func (dataBase *Database) AddChat(ctx context.Context, sessionId string, prompt 
 
 	log.Println("IS NEW : ", isNew)
 	log.Println("Session Id : ", sessionId)
+	log.Println("chatsSummary : ", chatsSummary)
+	log.Println("Vector : ", chatJson)
 
 	if isNew == "new" {
 		// Inserting new chat details
-		query = `INSERT INTO Chat_Details (Session_Id, Session_Prompt, Chats) VALUES ($1, $2, $3::JSONB)`
-		rows, err = tx.ExecContext(ctx, query, sessionId, prompt, chatJson)
+		query = `INSERT INTO Chat_Details (Session_Id, Session_Prompt, Chats, Chats_Summary) VALUES ($1, $2, $3::JSONB, $4)`
+		rows, err = tx.ExecContext(ctx, query, sessionId, prompt, chatJson, chatsSummary)
 	} else {
 		// Updating existing chat details
-		query = `UPDATE Chat_Details SET Chats = $2::JSONB WHERE Session_Id = $1`
-		rows, err = tx.ExecContext(ctx, query, sessionId, chatJson)
+		query = `UPDATE Chat_Details SET Chats = $2::JSONB, Chats_Summary = $3 WHERE Session_Id = $1`
+		rows, err = tx.ExecContext(ctx, query, sessionId, chatJson, chatsSummary)
 	}
 
 	fmt.Println(chats)
