@@ -1,12 +1,14 @@
 version: '3.3'
 
 services:
-
-  updater:
+  sync_worker:
     build: .
     restart: on-failure
     env_file:
       - .env
-    container_name: ${REDIS_WORKER_NAME}
-#    networks:
-#      ai_chat-backend:
+    container_name: sync_worker
+    networks:
+      ai_chat-backend:
+
+networks:
+  ai_chat-backend:

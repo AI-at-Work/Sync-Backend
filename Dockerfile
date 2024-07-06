@@ -1,13 +1,11 @@
-FROM golang:1.15.7-alpine3.13
-
-RUN apk update -qq && apk add git && apk add --no-cache bash
+FROM golang:1.22.5-alpine
 
 WORKDIR /go/src/sync_worker
 
 ADD . .
 
-RUN go mod download
+RUN go mod tidy
 
-RUN go build -o main ./server/main.go
+RUN go build -o main main.go
 
 CMD ["./main"]
