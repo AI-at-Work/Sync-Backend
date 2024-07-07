@@ -1,9 +1,16 @@
-version: '3.3'
+version: '3.5'
 
 services:
   sync_worker:
     build: .
     restart: on-failure
+    command: ["./wait-for-it.sh", "./main"]
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PORT=${DB_PORT}
+      - DB_PASSWORD=${DB_PASSWORD}
     env_file:
       - .env
     container_name: sync_worker
@@ -12,3 +19,6 @@ services:
 
 networks:
   ai_chat-backend:
+    name: ai_chat-backend
+    external: true
+
