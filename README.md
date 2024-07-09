@@ -1,5 +1,16 @@
 # Sync-Backend
-A Synchronization worker for back-end 
+A Synchronization worker for `Chat-Backend`. It takes data from redis streams and update it in postgres database to maintain database and cache consistency.
+
+## System Flow Diagram
+
+![System Flow Diagram](doc/flow.jpg)
+
+
+## Services
+
+- [Chat-AI](https://github.com/AI-at-Work/Chat-AI-Service)
+- [Chat-UI](https://github.com/AI-at-Work/Chat-UI)
+- [Chat-Backend](https://github.com/AI-at-Work/Chat-Backend)
 
 ## Getting Started
 
