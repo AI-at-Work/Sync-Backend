@@ -114,3 +114,49 @@ func (dataBase *Database) AddChat(ctx context.Context, sessionId string, prompt 
 
 	return nil
 }
+
+func (dataBase *Database) UpdateBalance(ctx context.Context, userId string, balance float64) error {
+	var query string
+	var rows sql.Result
+	var err error = nil
+
+	// Start a transaction
+	tx, err := dataBase.Db.BeginTxx(ctx, nil)
+	if err != nil {
+		return errors.New("unable to begin transaction")
+	}
+
+	// Use defer to roll back transaction if anything goes wrong before commit.
+	defer func() {
+		if err != nil {
+			log.Println("Doing RollBack : ", err)
+			tx.Rollback()
+		}
+	}()
+
+	// Updating existing chat details
+	query = `UPDATE User_Data SET Balance = $2 WHERE User_Id = $1`
+	rows, err = tx.ExecContext(ctx, query, userId, balance)
+
+	if err != nil {
+		fmt.Println(err)
+		return fmt.Errorf("error executing query: %v", err)
+	}
+
+	// Check if the operation affected any rows
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return errors.New("unable to get affected rows")
+	}
+	if affected == 0 {
+		return errors.New("no rows were affected, check user ID")
+	}
+
+	// Commit the transaction
+	if err = tx.Commit(); err != nil {
+		return errors.New("unable to commit the transaction")
+	}
+
+	fmt.Println("Balance Updated ..!!")
+	return nil
+}
