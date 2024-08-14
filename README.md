@@ -28,7 +28,7 @@ A Synchronization worker for `Chat-Backend`. It takes data from redis streams an
 
 3. Start the service:
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 ## Configuration
